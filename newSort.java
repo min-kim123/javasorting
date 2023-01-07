@@ -1,7 +1,7 @@
 /*
  * Author: Min Kim
- * Program Description: This program will help you sort your numbers. You have the option of 
- * Date: 
+ * Program Description: This program will help you sort your numbers. You have the option of bubble, selection, table, or quicksort.
+ * Date: 1/6/23
  */
 package Sort;
 
@@ -22,22 +22,24 @@ public class newSort {
 	
 	public newSort() {
 		System.out.println("Enter a number for the input file.");
-		System.out.println("1: input1.txt   2: input2.txt   3: input3.txt   4: input4.txt   5: input5.txt");
+		System.out.println("1: input1.txt   2: input2.txt   3: input3.txt");
 		input = consoleInput.nextLine();
 		if (input.length() != 1 && input.charAt(0) != '1' && input.charAt(0) != '2'
-				&& input.charAt(0) != '3' && input.charAt(0) != '4'  && input.charAt(0) != '5') {
+				&& input.charAt(0) != '3') {
 			System.out.println("Enter 1, 2, 3, 4, or 5");
 			while (input.length() != 1 && input.charAt(0) != '1' && input.charAt(0) != '2' 
-					&& input.charAt(0) != '3' && input.charAt(0) != '4' && input.charAt(0) != '5') {
+					&& input.charAt(0) != '3') {
 				input = consoleInput.nextLine();
 			}
 		}
+		//try catch for opening the file
 		try {
 			fileInput = new Scanner(new File("input" + input.charAt(0) + ".txt"));
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 			System.exit(0);
 		}
+		
 		String infile = fileInput.nextLine();
 		String[] inputStringArray = infile.split(",");
 		inputArray = new int[inputStringArray.length];
@@ -49,8 +51,8 @@ public class newSort {
 		System.out.println("1: Bubble   2: Selection   3: Table   4: Quick Sort");
 		input = consoleInput.nextLine();
 		if (input.length() != 1 && input.charAt(0) != '1' && input.charAt(0) != '2'
-				&& input.charAt(0) != '3' && input.charAt(0) != '4') {
-			System.out.println("Enter 1, 2, 3, or 4");
+				&& input.charAt(0) != '3') {
+			System.out.println("Enter 1, 2, or 3");
 			while (input.length() != 1 && input.charAt(0) != '1' && input.charAt(0) != '2' 
 					&& input.charAt(0) != '3' && input.charAt(0) != '4') {
 				input = consoleInput.nextLine();
@@ -58,16 +60,16 @@ public class newSort {
 		}
 		
 		startTime = System.currentTimeMillis();
-		if (input.equals("1")) {
+		if (input.equals("1")) {//bubble sort
 			inputArray = bubbleSort(inputArray);
 		}
-		if (input.equals("2")) {
+		if (input.equals("2")) {//selection sort
 			inputArray = selectionSort(inputArray);
 		}
-		if (input.equals("3")) {
+		if (input.equals("3")) {//table sort
 			inputArray = tableSort(inputArray);
 		}
-		if (input.equals("4")) {
+		if (input.equals("4")) { //quick sort
 			quickSort(inputArray, 0, inputArray.length - 1);
 		}
 		long totalTime = System.currentTimeMillis() - startTime;
@@ -95,8 +97,8 @@ public class newSort {
 	}
 		// compare each pair of numbers and move the larger to the right
 		int[] bubbleSort(int[] array) {
-			for (int j = 0; j < array.length; j++) {
-				for (int i = 0; i < array.length - 1; i++) {
+			for (int j = 0; j < array.length; ++j) {
+				for (int i = 0; i < array.length - 1; ++i) {
 					// if the one on the left is larger
 					if (array[i] > array[i+1]) {
 						// swap
@@ -109,7 +111,7 @@ public class newSort {
 			return array;
 		}
 		int[] selectionSort(int[] array) {
-			for (int j = 0; j < array.length; j++) {
+			for (int j = 0; j < array.length; ++j) {
 				int smallestNumber = array[j];
 				int smallestIndex = j;
 				for (int i = j; i < array.length; i++) {
@@ -133,6 +135,7 @@ public class newSort {
 			}
 			
 			int count = 0;
+			//i keeps track of the actual number
 			for (int i = 0; i < tally.length; i++) {
 				// j keeps track of how many times we've seen that number
 				for (int j = 0; j < tally[i]; j++) {
@@ -142,32 +145,29 @@ public class newSort {
 			}
 			return array;
 		}
-		void quickSort(int[] array, int left, int right) {
-			if (left < right) {
-				int a = qsPartition(array, left, right);
-				
-				quickSort(array, left, a - 1);
-				quickSort(array, a + 1, right);
+	
+		void quickSort(int[] array, int low, int high) {
+			if (low < high) {
+				int a = partition(array, low, high);
+				quickSort(array, low, a - 1);
+				quickSort(array, a + 1, high);
 			}
 		}
 		
-		int qsPartition(int[] array, int firstNumber, int lastNumber) {
-			// setting the pivot, smallest number, and smallest index
+		int partition(int[] array, int firstNumber, int lastNumber) {
 			int pivot = firstNumber; 
 			int smallestNumber = array[firstNumber];
 			int smallestIndex = firstNumber + 1;
 			
 			for (int j = firstNumber + 1; j <= lastNumber; j++) {
 					if (array[j] < array[pivot]) {
-						// swaps numbers
-						int temp = array[j];
+						int temp = array[j];//set temp to number
 						array[j] = array[smallestIndex];
 						array[smallestIndex] = temp;
 						
 						smallestIndex++;
 					}
 				}
-			// swaps the pivot in between the right and left partition
 			int temp = array[smallestIndex - 1];
 			array[smallestIndex - 1] = array[pivot];
 			array[pivot] = temp;
